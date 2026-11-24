@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart PC Part Finder</title>
+    <!-- GOOGLE ADSENSE: Paste your AdSense <script async src="..."> tag right below this line once approved -->
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #0f172a;
+            color: #f8fafc;
+            display: flex;
+            justify-content: center;
+            padding: 40px 20px;
+            margin: 0;
+        }
+        .container {
+            background-color: #1e293b;
+            padding: 30px;
+            border-radius: 12px;
+            max-width: 650px;
+            width: 100%;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
+        h1 { margin-top: 0; color: #38bdf8; }
+        p.subtitle { color: #94a3b8; margin-bottom: 25px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; }
+        select, button {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            border: 1px solid #334155;
+            background-color: #0f172a;
+            color: #f8fafc;
+            font-size: 16px;
+        }
+        button {
+            background-color: #38bdf8;
+            color: #0f172a;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            transition: background 0.2s;
+        }
+        button:hover { background-color: #0284c7; color: #fff; }
+        .result-card {
+            background-color: #0f172a;
+            border: 1px solid #38bdf8;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 10px;
+        }
+        .result-card h2 { margin-top: 0; color: #38bdf8; font-size: 20px; }
+        .part-list { list-style: none; padding: 0; margin: 0; }
+        .part-list li {
+            padding: 12px 0;
+            border-bottom: 1px solid #1e293b;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+        }
+        .part-list li:last-child { border-bottom: none; }
+        .part-info { display: flex; flex-direction: column; }
+        .part-label { color: #94a3b8; font-size: 13px; font-weight: 600; }
+        .part-name { font-size: 15px; margin-top: 2px; }
+        .buy-btn {
+            background-color: #f59e0b;
+            color: #0f172a;
+            text-decoration: none;
+            padding: 7px 14px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        .buy-btn:hover { background-color: #d97706; color: #fff; }
+        .price-tag {
+            margin-top: 15px;
+            text-align: right;
+            font-size: 18px;
+            font-weight: bold;
+            color: #4ade80;
+        }
+        .ad-banner {
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #0f172a;
+            border: 1px dashed #334155;
+            border-radius: 8px;
+            text-align: center;
+            color: #64748b;
+            font-size: 13px;
+        }
+        .disclosure {
+            margin-top: 25px;
+            font-size: 12px;
+            color: #64748b;
+            text-align: center;
+            line-height: 1.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🖥️ PC Part Recommender</h1>
+        <p class="subtitle">Select what you need your PC for and your budget tier to get a balanced parts list.</p>
+
+        <form method="POST">
+            <label for="use_case">1. Primary Use Case</label>
+            <select name="use_case" id="use_case">
+                <option value="gaming" {% if use_case == 'gaming' %}selected{% endif %}>Gaming</option>
+                <option value="work" {% if use_case == 'work' %}selected{% endif %}>Office Work & Productivity</option>
+                <option value="editing" {% if use_case == 'editing' %}selected{% endif %}>Video Editing & 3D Design</option>
+            </select>
+
+            <label for="budget">2. Budget Tier</label>
+            <select name="budget" id="budget">
+                <option value="budget" {% if budget == 'budget' %}selected{% endif %}>Budget (Entry-Level)</option>
+                <option value="mid" {% if budget == 'mid' %}selected{% endif %}>Mid-Range (Best Value)</option>
+                <option value="high" {% if budget == 'high' %}selected{% endif %}>High-End (Maximum Performance)</option>
+            </select>
+
+            <button type="submit">Generate My PC Build</button>
+        </form>
+
+        {% if build %}
+        <div class="result-card">
+            <h2>{{ build.name }}</h2>
+            <ul class="part-list">
+                <li>
+                    <div class="part-info">
+                        <span class="part-label">Processor (CPU)</span>
+                        <span class="part-name">{{ build.cpu }}</span>
+                    </div>
+                    <a href="{{ links.cpu }}" target="_blank" rel="nofollow sponsored" class="buy-btn">Check Price</a>
+                </li>
+                <li>
+                    <div class="part-info">
+                        <span class="part-label">Graphics (GPU)</span>
+                        <span class="part-name">{{ build.gpu }}</span>
+                    </div>
+                    <a href="{{ links.gpu }}" target="_blank" rel="nofollow sponsored" class="buy-btn">Check Price</a>
+                </li>
+                <li>
+                    <div class="part-info">
+                        <span class="part-label">Memory (RAM)</span>
+                        <span class="part-name">{{ build.ram }}</span>
+                    </div>
+                    <a href="{{ links.ram }}" target="_blank" rel="nofollow sponsored" class="buy-btn">Check Price</a>
+                </li>
+                <li>
+                    <div class="part-info">
+                        <span class="part-label">Storage</span>
+                        <span class="part-name">{{ build.storage }}</span>
+                    </div>
+                    <a href="{{ links.storage }}" target="_blank" rel="nofollow sponsored" class="buy-btn">Check Price</a>
+                </li>
+                <li>
+                    <div class="part-info">
+                        <span class="part-label">Power Supply</span>
+                        <span class="part-name">{{ build.psu }}</span>
+                    </div>
+                    <a href="{{ links.psu }}" target="_blank" rel="nofollow sponsored" class="buy-btn">Check Price</a>
+                </li>
+            </ul>
+            <div class="price-tag">Estimated Total: {{ build.est_price }}</div>
+        </div>
+
+        <!-- GOOGLE ADSENSE UNIT: Replace this placeholder box with your AdSense display ad code later -->
+        <div class="ad-banner">
+            Advertisement Space (Connect a custom domain + Google AdSense to activate)
+        </div>
+        {% endif %}
+
+        <div class="disclosure">
+            Affiliate Disclosure: As an Amazon Associate, I earn from qualifying purchases at no extra cost to you.
+        </div>
+    </div>
+</body>
+</html>
